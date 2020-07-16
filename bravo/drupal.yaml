@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: drupal
+  name: drupal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drupal
+  template:
+    metadata:
+      labels:
+        app: drupal
+    spec:
+      initContainers:
+      - name: busybox
+        image: busybox
+        command: ['cp','-r','/var/www/html/sites','/data;','chown','www-data:www-data','/data','-R']
+      containers:
+      - image: drupal:8.6
+        name: drupal
+        volumeMounts:
+        - mountPath: /data
+          name: drupal-data
+        - mountPath: /var/www/html
+          name: drupal-html
+          subPath: modules
+        - mountPath: /var/www/profiles
+          name: drupal-profiles
+          subPath: profiles
+        - mountPath: /var/www/sites
+          name: drupal-sites
+          subPath: sites
+        - mountPath: /var/www/themes
+          name: drupal-themes
+          subPath: themes
+      volumes:
+      - name: drupal-data
+        persistentVolumeClaim: 
+          claimName: drupal-pvc
+      - name: drupal-html
+        persistentVolumeClaim: 
+          claimName: drupal-pvc
+      - name: drupal-profiles
+        persistentVolumeClaim: 
+          claimName: drupal-pvc
+      - name: drupal-sites
+        persistentVolumeClaim: 
+          claimName: drupal-pvc
+      - name: drupal-themes
+        persistentVolumeClaim: 
+          claimName: drupal-pvc
