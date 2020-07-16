@@ -13,20 +13,3 @@ spec:
   selector:
     matchLabels:
       name: drupal-pv
-master $ cat drupal-pv.yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: drupal-pv
-  labels:
-    name: drupal-pv
-spec:
-  capacity:
-    storage: 5Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Recycle
-  storageClassName: slow
-  hostPath:
-    path: /drupal-data
